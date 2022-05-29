@@ -44,7 +44,7 @@ class TaskItem
         return $this->$text;
     }
 
-    public function setText(string $text): ?string
+    public function setText(string $text): self
     {
         $this->text = $text;
 
