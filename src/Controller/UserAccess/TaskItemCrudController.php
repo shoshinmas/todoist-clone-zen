@@ -1,6 +1,6 @@
 <?php
 
-namespace UserAccess;
+namespace App\Controller\UserAccess;
 
 use App\Entity\TaskItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
