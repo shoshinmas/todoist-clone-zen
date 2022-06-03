@@ -62,4 +62,14 @@ class TaskItem
 
         return $this;
     }
+
+    public function getExportData()
+    {
+        return \array_merge([
+            'id' => $this->id,
+            'date' => $this->date->format('d.m.Y H:m'),
+            'flag' => $this->flag,
+            'taskitem' => $this->taskItemText ?? '',
+        ]);
+    }
 }
