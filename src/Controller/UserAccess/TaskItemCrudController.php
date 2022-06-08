@@ -13,6 +13,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 
 class TaskItemCrudController extends AbstractCrudController
 {
@@ -63,32 +73,22 @@ class TaskItemCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('Tasks')
             ->setSearchFields(['text'])
             ->setDefaultSort(['flag' => 'DESC'])
+            ->showEntityActionsInlined()
         ;
     }
 
-   /* public function configureFilters(Filters $filters): Filters
+    public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add(EntityFilter::new('id'))
+            ->add(EntityFilter::new('taskitem'))
         ;
     }
 
     public function configureFields(string $pageName): iterable
      {
-        yield AssociationField::new('id');
-        yield TextareaField::new('text')
-            ->hideOnIndex()
-        ;
-        
-        $date = DateTimeField::new('date')->setFormTypeOptions([
-            'html5' => true,
-            'years' => range(date('Y'), date('Y') + 5),
-            'widget' => 'single_text',
-        ]);
-        if (Crud::PAGE_EDIT === $pageName) {
-            yield $date->setFormTypeOption('disabled', true);
-        } else {
-            yield $date;
-        }
-     }*/
+        yield TextField::new('taskitemtext', 'Task');
+        yield NumberField::new('flag', 'Flag');
+        yield BooleanField::new('isdone', 'Done?');
+        yield DateTimeField::new('date', 'Deadline');
+     }
 }

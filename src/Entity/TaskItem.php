@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TaskItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
 
 #[ORM\Entity(repositoryClass: TaskItemRepository::class)]
 class TaskItem
@@ -21,6 +22,9 @@ class TaskItem
 
     #[ORM\Column(type: 'string', length: 255)]
     private $taskItemText;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isDone;
 
     public function getId(): ?int
     {
@@ -70,6 +74,19 @@ class TaskItem
             'date' => $this->date->format('d.m.Y H:m'),
             'flag' => $this->flag,
             'taskitem' => $this->taskItemText ?? '',
+            'isdone' => $this->isDone,
         ]);
+    }
+
+    public function getIsDone(): ?bool
+    {
+        return $this->isDone;
+    }
+
+    public function setIsDone(bool $isDone): self
+    {
+        $this->isDone = $isDone;
+        
+        return $this;
     }
 }
