@@ -29,7 +29,7 @@ class TaskItemRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+ 
     public function remove(TaskItem $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

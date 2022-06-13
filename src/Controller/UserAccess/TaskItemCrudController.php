@@ -89,6 +89,12 @@ class TaskItemCrudController extends AbstractCrudController
         yield TextField::new('taskitemtext', 'Task');
         yield NumberField::new('flag', 'Flag');
         yield BooleanField::new('isdone', 'Done?');
-        yield DateTimeField::new('date', 'Deadline');
+        //yield DateTimeField::new('date', 'Deadline');
+
+        $deadline = DateTimeField::new('date', 'Deadline')->setFormTypeOptions([
+                        'html5' => false,
+                        'widget' => 'single_text',
+                    ]);
+                        yield $deadline;
      }
 }
