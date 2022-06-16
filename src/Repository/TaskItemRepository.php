@@ -23,6 +23,11 @@ class TaskItemRepository extends ServiceEntityRepository
         parent::__construct($registry, TaskItem::class);
     }
 
+    public function findAll()
+    {
+        return $this->findBy([], ['flag' => 'DESC', 'date' => 'ASC']);
+    }
+
     public function add(TaskItem $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
