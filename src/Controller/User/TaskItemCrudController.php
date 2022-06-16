@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controller\UserAccess;
+declare(strict_types=1);
+
+namespace App\Controller\User;
 
 use App\Entity\TaskItem;
 use App\Service\CsvService;
