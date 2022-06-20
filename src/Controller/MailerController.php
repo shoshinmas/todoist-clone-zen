@@ -25,13 +25,6 @@ class MailerController extends AbstractController
 
         $mailer->send($email);
 
-        return new Response(<<<EOF
-        <html>
-            <body>
-                <img src="/images/under-construction.gif" />
-            </body>
-        </html>
-        EOF
-            );
+        dd("cokolwiek");
     }
 }

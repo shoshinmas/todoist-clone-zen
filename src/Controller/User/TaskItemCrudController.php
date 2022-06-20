@@ -53,19 +53,10 @@ class TaskItemCrudController extends AbstractCrudController
 
     public function export(Request $request)
     {
-        $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
-        $filters = $this->container->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
-        $tasks = $this->createIndexQueryBuilder($context->getSearch(), $context->getEntity(), $fields, $filters)
-            ->getQuery()
-            ->getResult();
-
         $data = [];
-        foreach ($tasks as $task) {
-            $data[] = $task->getExportData();
-        }
+        $this->csvService->gatherData($request, $this->configureFields);
 
-        return $this->csvService->export($data, 'export_tasks_'.date_create()->format('d-m-y').'.csv');
+        return $this->csvService->fileEncode($data, 'export_tasks_'.date_create()->format('d-m-y').'.csv');
     }
 
     public function configureCrud(Crud $crud): Crud
