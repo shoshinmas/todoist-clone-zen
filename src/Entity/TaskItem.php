@@ -69,7 +69,7 @@ class TaskItem
         return $this;
     }
 
-    public function getExportData()
+    public function getExportData(): ?array
     {
         return \array_merge([
             'id' => $this->id,
@@ -93,6 +93,6 @@ class TaskItem
     }
 
     public function __toString() {
-        return $this->name;
+        return $this->taskItemText;
     }
 }
