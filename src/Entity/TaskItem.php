@@ -69,17 +69,6 @@ class TaskItem
         return $this;
     }
 
-    public function getExportData(): ?array
-    {
-        return \array_merge([
-            'id' => $this->id,
-            'date' => $this->date->format('d.m.Y H:m'),
-            'flag' => $this->flag,
-            'taskitem' => $this->taskItemText ?? '',
-            'isdone' => $this->isDone,
-        ]);
-    }
-
     public function getIsDone(): ?bool
     {
         return $this->isDone;

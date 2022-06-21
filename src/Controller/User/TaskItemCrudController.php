@@ -15,11 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
@@ -51,12 +47,22 @@ class TaskItemCrudController extends AbstractCrudController
         return $actions->add(Crud::PAGE_INDEX, $export);
     }
 
+    private function gatherData(Request $request)
+    {
+        $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
+        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
+        $filters = $this->container->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
+        return $this->createIndexQueryBuilder($context->getSearch(), $context->getEntity(), $fields, $filters)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function export(Request $request)
     {
-        $data = [];
-        $this->csvService->gatherData($request, $this->configureFields);
+        $tasks = $this->gatherData($request);
+        $this->csvService->gatherData($tasks);
 
-        return $this->csvService->fileEncode($data, 'export_tasks_'.date_create()->format('d-m-y').'.csv');
+        return $this->csvService->fileEncode($tasks, 'export_tasks_'.date_create()->format('d-m-y').'.csv');
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -82,7 +88,6 @@ class TaskItemCrudController extends AbstractCrudController
         yield TextField::new('taskitemtext', 'Task');
         yield NumberField::new('flag', 'Flag');
         yield BooleanField::new('isdone', 'Done?');
-        //yield DateTimeField::new('date', 'Deadline');
 
         $deadline = DateTimeField::new('date', 'Deadline')->setFormTypeOptions([
                         'html5' => false,
