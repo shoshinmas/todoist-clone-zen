@@ -1,27 +1,33 @@
 <?php
 namespace App\Controller;
 
+use App\Repository\TaskItemRepository;
+use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Controller\TaskController;
+use Twig\Environment;
 
 class MailerController extends AbstractController
 {
-    #[Route('/email')]
-    public function sendEmail(MailerInterface $mailer): Response
+    #[NoReturn] #[Route('/email')]
+    public function sendEmail(MailerInterface $mailer, TaskItemRepository $taskItemRepository): Response
     {
-        $email = (new Email())
-            ->from('hello@example.com')
-            ->to('borntocode83@gmail.com')
+        $tasks = $taskItemRepository->findAll();
+        $email = (new TemplatedEmail())
+            ->from('msflavourtec@gmail.com')
+            ->to('msflavourtec@gmail.com')
             //->cc('cc@example.com')
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
             ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
+            ->htmlTemplate('emails/tasksexport.html.twig')
+            ->context(['tasks' => $tasks]);
 
         $mailer->send($email);
 

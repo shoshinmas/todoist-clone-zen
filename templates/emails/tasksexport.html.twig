@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Your Tasks{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+        <h1>Below, the calendar with your tasks: ✅</h1>
+
+       {% for taski in tasks %}
+            <h4> taski </h4>
+       {%  endfor %}
+    </div>
+{% endblock %}
