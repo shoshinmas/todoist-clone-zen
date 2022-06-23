@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Admin2;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -49,7 +49,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Admin2::class,
+            'data_class' => User::class,
         ]);
     }
 }
