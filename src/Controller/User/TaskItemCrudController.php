@@ -27,7 +27,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 class TaskItemCrudController extends AbstractCrudController
 {
     private CsvService $csvService;
-    private const DAYS_BEFORE_SUMMARY_SEND = 7;
 
     public function __construct(CsvService $csvService)
     {
@@ -86,11 +85,6 @@ class TaskItemCrudController extends AbstractCrudController
         ]);
      }
 
-   /* public function countOldRejected(): int
-    {
-        return $this->getOldRejectedQueryBuilder()->select('COUNT(c.id)')->getQuery()->getSingleScalarResult();
-    }*/
-
     /**
      * @param Request $request A Request instance
      *
@@ -107,17 +101,4 @@ class TaskItemCrudController extends AbstractCrudController
             ->getQuery()
             ->getResult();
     }
-
-    /*private function getOldRejectedQueryBuilder(): QueryBuilder
-    {
-            return $this->createQueryBuilder('c')
-                    ->andWhere('c.state = :state_rejected or c.state = :state_spam')
-                ->andWhere('c.createdAt < :date')
-                ->setParameters([
-                        'state_rejected' => 'rejected',
-                        'state_spam' => 'spam',
-                        'date' => new \DateTimeImmutable(-self::DAYS_BEFORE_REJECTED_REMOVAL.' days'),
-                    ])
-            ;
-    }*/
 }

@@ -45,4 +45,17 @@ class TaskItemRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function sendOnceWeekly(): array
+    {
+        $tasksToSend = $this->findOrdered();
+        return $tasksToSend;
+    }
+
+    public function sendTodayTasks(): array
+    {
+        $tasksToSend = $this->findOrdered();
+        return $tasksToSend;
+
+    }
 }
