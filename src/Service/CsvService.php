@@ -12,11 +12,11 @@ use Symfony\Component\Serializer\Serializer;
 
 class CsvService
 {
-    public function fileEncode($data, $filename)
+    public function fileEncode($data, $filename): Response
     {
-        $this->gatherData($data);
         $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
         $response = new Response($serializer->encode($data, CsvEncoder::FORMAT));
+        // przerobic ^^
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
         $response->headers->set('Content-Disposition', "attachment; filename=\"$filename\"");
         return $response;
@@ -25,14 +25,8 @@ class CsvService
     public function fileDecode($filename, $options = [])
     {
         $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
+        // if - sprawdzenie czy filename istnieje
         return $serializer->decode(file_get_contents($filename), CsvEncoder::FORMAT, $options);
     }
 
-    public function gatherData(Array $tasks) {
-        $data = [];
-        foreach ($tasks as $task) {
-            $data[] = $task;
-        }
-        return $data;
-    }
 }

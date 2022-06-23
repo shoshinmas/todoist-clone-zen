@@ -1,5 +1,5 @@
 <?php
-
+// zrobić tylko jeden kontekst użytkownika
 namespace App\Entity;
 
 use App\Repository\UserRepository;

@@ -15,7 +15,7 @@ class TaskController extends AbstractController
     public function index(Environment $twig, TaskItemRepository $taskItemRepository): Response
     {
         return new Response($twig->render('task/index.html.twig', [
-                        'tasks' => $taskItemRepository->findAll(),
+                        'tasks' => $taskItemRepository->findOrdered(),
                     ]));
     }
 }

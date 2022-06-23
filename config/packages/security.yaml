@@ -36,8 +36,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/manage, roles: ROLE_USER }
-         - { path: ^/manage, roles: ROLE_ADMIN }
-
+       #  - { path: ^/register, roles: ROLE_GUEST }
+ # przestawić zabezpieczenia z manage dla usera na wszystko dla usera, konkretne dla visitora
 when@test:
     security:
         password_hashers:

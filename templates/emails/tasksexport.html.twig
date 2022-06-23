@@ -1,13 +1,14 @@
-{% extends 'base.html.twig' %}
+<body>
+<html>
+<p>Welcome<br>
+    Hey! Learn the best practices of building HTML emails and play with ready-to-go templates.</p>
+<p><a href="/blog/build-html-email/">Mailtrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
 
-{% block title %}Your Tasks{% endblock %}
-
-{% block body %}
     <div class="example-wrapper">
         <h1>Below, the calendar with your tasks: ✅</h1>
 
-       {% for taski in tasks %}
-            <h4> taski </h4>
+       {% for task in tasks %}
+            <h4> {{ task }} </h4>
        {%  endfor %}
-    </div>
-{% endblock %}
+    </div></html>
+</body>

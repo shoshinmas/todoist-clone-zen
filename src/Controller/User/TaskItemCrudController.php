@@ -14,6 +14,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -25,6 +27,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 class TaskItemCrudController extends AbstractCrudController
 {
     private CsvService $csvService;
+    private const DAYS_BEFORE_SUMMARY_SEND = 7;
 
     public function __construct(CsvService $csvService)
     {
@@ -47,20 +50,9 @@ class TaskItemCrudController extends AbstractCrudController
         return $actions->add(Crud::PAGE_INDEX, $export);
     }
 
-    private function gatherData(Request $request)
-    {
-        $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
-        $filters = $this->container->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
-        return $this->createIndexQueryBuilder($context->getSearch(), $context->getEntity(), $fields, $filters)
-            ->getQuery()
-            ->getResult();
-    }
-
     public function export(Request $request)
     {
         $tasks = $this->gatherData($request);
-        $this->csvService->gatherData($tasks);
 
         return $this->csvService->fileEncode($tasks, 'export_tasks_'.date_create()->format('d-m-y').'.csv');
     }
@@ -88,11 +80,44 @@ class TaskItemCrudController extends AbstractCrudController
         yield TextField::new('taskitemtext', 'Task');
         yield NumberField::new('flag', 'Flag');
         yield BooleanField::new('isdone', 'Done?');
-
-        $deadline = DateTimeField::new('date', 'Deadline')->setFormTypeOptions([
-                        'html5' => false,
-                        'widget' => 'single_text',
-                    ]);
-                        yield $deadline;
+        yield DateTimeField::new('date', 'Deadline')->setFormTypeOptions([
+            'html5' => false,
+            'widget' => 'single_text',
+        ]);
      }
+
+   /* public function countOldRejected(): int
+    {
+        return $this->getOldRejectedQueryBuilder()->select('COUNT(c.id)')->getQuery()->getSingleScalarResult();
+    }*/
+
+    /**
+     * @param Request $request A Request instance
+     *
+     * @return array returns an array of tasks
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function gatherData(Request $request): array
+    {
+        $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
+        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
+        $filters = $this->container->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
+        return $this->createIndexQueryBuilder($context->getSearch(), $context->getEntity(), $fields, $filters)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /*private function getOldRejectedQueryBuilder(): QueryBuilder
+    {
+            return $this->createQueryBuilder('c')
+                    ->andWhere('c.state = :state_rejected or c.state = :state_spam')
+                ->andWhere('c.createdAt < :date')
+                ->setParameters([
+                        'state_rejected' => 'rejected',
+                        'state_spam' => 'spam',
+                        'date' => new \DateTimeImmutable(-self::DAYS_BEFORE_REJECTED_REMOVAL.' days'),
+                    ])
+            ;
+    }*/
 }
